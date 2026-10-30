@@ -9,6 +9,14 @@ don't exist.
 Built during the Meta AI Developer Hackathon, October 26 – November 4, 2026.
 "Schroeder" is the project code name; the final product name is pending.
 
+## Built during the event
+
+**All code in this repo was written during the event.** The extension
+was designed and built from scratch between October 28 and October 30,
+2026 — v1 on Oct 28, the household build (v0.5.0) on Oct 30. No
+pre-existing codebase is included, and nothing in the repo predates the
+hackathon window.
+
 ## The household idea
 
 Trackers don't just profile a person — they profile a *machine*, including
@@ -61,6 +69,35 @@ of the system that follows a household from site to site.
   against a baseline and flag planted "canary" interests, so a user can
   check whether the noise is actually moving their profile. The repo
   ships a clearly labeled SAMPLE baseline.
+
+## The agentic layer
+
+The only AI component is the **arc author** (`src/lib/personas-spark.js`),
+and it is deliberately on a short leash:
+
+- **Interface** — `POST https://api.meta.ai/v1/chat/completions`, model
+  `muse-spark-1.3`, called with the *user's own* Meta Model API key
+  (entered in Settings, stored only in local extension storage). With no
+  key configured, the provider throws `NO_KEY` and the engine uses the
+  local generator (`src/lib/personas-local.js`) — the product is fully
+  functional without the API.
+- **What the model returns** — strict JSON *narratives* only: for each
+  persona, exactly 2 cluster IDs chosen from the fixed set in
+  `src/lib/clusters.js`, optional query paraphrases, and arc-stage
+  labels (`browse` | `compare` | `brand`). The model never returns
+  steps, URLs, or executable actions; a response containing a top-level
+  `steps` key is rejected outright.
+- **Validation** — every response is schema-checked locally
+  (`validateNarrative`). Any violation discards the response and falls
+  back to the local provider. A second, household-specific validation
+  then checks the resulting arcs against the Household setting:
+  in a protective mode, any arc touching the parenting cluster or
+  child-content terms is rejected wholesale and regenerated locally.
+- **Execution** — local code turns validated narratives into browsing
+  steps using only domains from `clusters.js`, and every step still has
+  to pass the frozen allowlist in `src/lib/actions.js`
+  (`Actions.assertAllowed()`). The model proposes stories; it never
+  drives the browser.
 
 ## Design law — what it never does
 
