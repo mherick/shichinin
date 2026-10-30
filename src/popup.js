@@ -1,4 +1,4 @@
-// Schroeder popup: status pill, big Start/Pause button, plain
+// Shichinin popup: status pill, big Start/Pause button, plain
 // Light / Standard / High choices, and today's activity in plain words.
 (function () {
   var LEVELS = ['low', 'medium', 'high'];
@@ -24,7 +24,7 @@
     pill.textContent = settings.paused ? 'Paused' : 'On';
     pill.className = 'pill' + (settings.paused ? ' paused' : '');
     var toggle = $('pauseBtn');
-    toggle.textContent = settings.paused ? 'Start Schroeder' : 'Pause Schroeder';
+    toggle.textContent = settings.paused ? 'Start Shichinin' : 'Pause Shichinin';
     toggle.className = 'big-toggle' + (settings.paused ? ' paused' : '');
 
     LEVELS.forEach(function (lv) {
@@ -57,26 +57,26 @@
   }
 
   function refresh() {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_GET_STATE' }).then(render);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_GET_STATE' }).then(render);
   }
 
   LEVELS.forEach(function (lv) {
     $(SEG_IDS[lv]).addEventListener('click', function () {
       if (!settings || settings.aggressiveness === lv) return;
       settings.aggressiveness = lv;
-      Schroeder.Store.saveSettings(settings).then(function () {
-        chrome.runtime.sendMessage({ type: 'SCHROEDER_REGENERATE' }).then(refresh);
+      Shichinin.Store.saveSettings(settings).then(function () {
+        chrome.runtime.sendMessage({ type: 'SHICHININ_REGENERATE' }).then(refresh);
       });
     });
   });
 
   $('pauseBtn').addEventListener('click', function () {
     settings.paused = !settings.paused;
-    Schroeder.Store.saveSettings(settings).then(refresh);
+    Shichinin.Store.saveSettings(settings).then(refresh);
   });
 
   $('sweepBtn').addEventListener('click', function () {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_SWEEP_NOW' }).then(refresh);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_SWEEP_NOW' }).then(refresh);
   });
 
   $('dashBtn').addEventListener('click', function () {

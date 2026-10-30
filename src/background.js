@@ -1,8 +1,8 @@
-// Schroeder — background service worker.
+// Shichinin — background service worker.
 // Drives everything: the 1-minute alarm tick executes due itinerary steps
 // in inactive background tabs, runs cookie-pool sweeps on cadence, and
 // keeps the day plan (personas + scheduled steps) in chrome.storage.local.
-// All automated actions go through Schroeder.Actions.assertAllowed.
+// All automated actions go through Shichinin.Actions.assertAllowed.
 importScripts(
   'lib/rng.js', 'lib/actions.js', 'lib/clusters.js', 'lib/canary.js',
   'lib/evidence.js', 'lib/scheduler.js',
@@ -11,8 +11,8 @@ importScripts(
   'lib/store.js'
 );
 
-var S = Schroeder;
-var TICK_ALARM = 'schroeder-tick';
+var S = Shichinin;
+var TICK_ALARM = 'shichinin-tick';
 var PERSONA_TAB_TIMEOUT_MS = 6 * 60 * 1000;
 
 var sparkProvider = S.SparkPersonaProvider.create({
@@ -320,7 +320,7 @@ function tick() {
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (!msg || !msg.type) return;
 
-  if (msg.type === 'SCHROEDER_GET_INSTRUCTIONS') {
+  if (msg.type === 'SHICHININ_GET_INSTRUCTIONS') {
     // A content script asks: is this tab a persona tab with a step?
     var tabId = sender.tab && sender.tab.id;
     if (tabId === undefined) { sendResponse({ step: null }); return; }
@@ -336,7 +336,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     return true; // async
   }
 
-  if (msg.type === 'SCHROEDER_STEP_DONE') {
+  if (msg.type === 'SHICHININ_STEP_DONE') {
     var doneTabId = sender.tab && sender.tab.id;
     getPersonaTabs().then(function (map) {
       var entry = doneTabId !== undefined ? map[doneTabId] : null;
@@ -392,7 +392,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     return;
   }
 
-  if (msg.type === 'SCHROEDER_LOG') {
+  if (msg.type === 'SHICHININ_LOG') {
     // Content-script events: consent accepts, storage seeds.
     var statField = msg.kind === 'consent-accept' ? 'consentAccepts'
       : msg.kind === 'storage-seed' ? 'storageSeeds' : null;
@@ -403,7 +403,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     return;
   }
 
-  if (msg.type === 'SCHROEDER_GET_STATE') {
+  if (msg.type === 'SHICHININ_GET_STATE') {
     Promise.all([
       S.Store.getSettings(),
       S.Store.getStats(todayKey()),
@@ -418,12 +418,12 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     return true;
   }
 
-  if (msg.type === 'SCHROEDER_REGENERATE') {
+  if (msg.type === 'SHICHININ_REGENERATE') {
     ensurePlan(true).then(function (plan) { sendResponse({ ok: true, plan: plan }); });
     return true;
   }
 
-  if (msg.type === 'SCHROEDER_SWEEP_NOW') {
+  if (msg.type === 'SHICHININ_SWEEP_NOW') {
     S.Store.getSettings().then(function (settings) {
       runCookieSweep(settings, true).then(function (summary) {
         sendResponse({ ok: true, summary: summary });
@@ -432,7 +432,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     return true;
   }
 
-  if (msg.type === 'SCHROEDER_CLEAR_LOG') {
+  if (msg.type === 'SHICHININ_CLEAR_LOG') {
     S.Store.clearLog().then(function () { sendResponse({ ok: true }); });
     return true;
   }
@@ -452,7 +452,7 @@ function init() {
 }
 
 chrome.runtime.onInstalled.addListener(function () {
-  S.Store.log('install', 'Schroeder installed. Default aggressiveness: HIGH. Safe mode: ON.');
+  S.Store.log('install', 'Shichinin installed. Default aggressiveness: HIGH. Safe mode: ON.');
   init();
 });
 chrome.runtime.onStartup.addListener(init);

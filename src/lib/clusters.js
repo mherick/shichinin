@@ -1,4 +1,4 @@
-// Schroeder — interest clusters for the local persona generator.
+// Shichinin — interest clusters for the local persona generator.
 // Each cluster: real sites a person with this interest plausibly visits,
 // and a bank of search queries such a person plausibly types.
 // Sites are ordinary content/publisher pages. No ad links, ever.
@@ -13,9 +13,9 @@
 // permissions); a stale or wrong score degrades to v1 behavior, never
 // breakage. revisit: true marks sites worth a repeat visit within 48h
 // (remarketing pools reward revisits).
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Clusters = [
+Shichinin.Clusters = [
   {
     id: 'sourdough',
     label: 'Home baking & sourdough',
@@ -331,8 +331,8 @@ Schroeder.Clusters = [
   }
 ];
 
-Schroeder.ClusterById = {};
-Schroeder.Clusters.forEach(function (c) { Schroeder.ClusterById[c.id] = c; });
+Shichinin.ClusterById = {};
+Shichinin.Clusters.forEach(function (c) { Shichinin.ClusterById[c.id] = c; });
 
 // ---- Household mode pools (v0.5.0) --------------------------------------
 // Child-content blocklist: word-boundary patterns for terms that mark
@@ -340,7 +340,7 @@ Schroeder.Clusters.forEach(function (c) { Schroeder.ClusterById[c.id] = c; });
 // modes ('adults' and 'child'), no cluster, site, or query matching
 // this list may be browsed or searched by a decoy — the decoys are
 // grown-ups, and the profile trackers build is of adults.
-Schroeder.CHILD_CONTENT_TERMS = [
+Shichinin.CHILD_CONTENT_TERMS = [
   'toy', 'toys', 'kid', 'kids', 'child', 'children', 'baby', 'babies',
   'toddler', 'newborn', 'infant', 'parent', 'parents', 'parenting',
   'cartoon', 'school', 'nursery', 'teen', 'teens', 'teenage',
@@ -348,13 +348,13 @@ Schroeder.CHILD_CONTENT_TERMS = [
   'kindergarten'
 ];
 var CHILD_CONTENT_RE = new RegExp(
-  '\\b(?:' + Schroeder.CHILD_CONTENT_TERMS.join('|') + ')\\b', 'i');
+  '\\b(?:' + Shichinin.CHILD_CONTENT_TERMS.join('|') + ')\\b', 'i');
 
-Schroeder.isChildContent = function (text) {
+Shichinin.isChildContent = function (text) {
   return CHILD_CONTENT_RE.test(String(text || ''));
 };
 
-Schroeder.isProtectiveHousehold = function (household) {
+Shichinin.isProtectiveHousehold = function (household) {
   return household === 'adults' || household === 'child';
 };
 
@@ -376,27 +376,27 @@ function clusterText(cluster) {
 // content (e.g. the whole 'newparent' cluster). Individual stray
 // queries inside an otherwise adult cluster are stripped by the
 // item-level filter instead.
-Schroeder.isClusterBlockedForHousehold = function (cluster) {
-  return !!cluster && Schroeder.isChildContent(clusterText(cluster));
+Shichinin.isClusterBlockedForHousehold = function (cluster) {
+  return !!cluster && Shichinin.isChildContent(clusterText(cluster));
 };
 
-Schroeder.clusterAllowedForHousehold = function (clusterId, household) {
-  if (!Schroeder.isProtectiveHousehold(household)) return true;
-  var cluster = Schroeder.ClusterById[clusterId];
-  return !!cluster && !Schroeder.isClusterBlockedForHousehold(cluster);
+Shichinin.clusterAllowedForHousehold = function (clusterId, household) {
+  if (!Shichinin.isProtectiveHousehold(household)) return true;
+  var cluster = Shichinin.ClusterById[clusterId];
+  return !!cluster && !Shichinin.isClusterBlockedForHousehold(cluster);
 };
 
 // Item-level filter (defense in depth): returns a copy of the cluster
 // with any blocked site/query removed. Used at itinerary time so even a
 // persona authored outside the household pool cannot emit a blocked
 // destination or search in a protective mode.
-Schroeder.filterClusterForHousehold = function (cluster, household) {
-  if (!cluster || !Schroeder.isProtectiveHousehold(household)) return cluster;
+Shichinin.filterClusterForHousehold = function (cluster, household) {
+  if (!cluster || !Shichinin.isProtectiveHousehold(household)) return cluster;
   var sites = (cluster.sites || []).filter(function (s) {
-    return !Schroeder.isChildContent(typeof s === 'string' ? s : s.url);
+    return !Shichinin.isChildContent(typeof s === 'string' ? s : s.url);
   });
   var queries = (cluster.queries || []).filter(function (q) {
-    return !Schroeder.isChildContent(q);
+    return !Shichinin.isChildContent(q);
   });
   if (sites.length === (cluster.sites || []).length &&
       queries.length === (cluster.queries || []).length) return cluster;
@@ -411,13 +411,13 @@ Schroeder.filterClusterForHousehold = function (cluster, household) {
 // mode. Protective modes: blocked clusters removed entirely, remaining
 // clusters item-filtered, and the adult-life cluster always present
 // (selective coherence — the grown-ups axis keeps recurring).
-Schroeder.householdClusters = function (household) {
-  if (!Schroeder.isProtectiveHousehold(household)) return Schroeder.Clusters;
-  return Schroeder.Clusters
-    .filter(function (c) { return !Schroeder.isClusterBlockedForHousehold(c); })
-    .map(function (c) { return Schroeder.filterClusterForHousehold(c, household); });
+Shichinin.householdClusters = function (household) {
+  if (!Shichinin.isProtectiveHousehold(household)) return Shichinin.Clusters;
+  return Shichinin.Clusters
+    .filter(function (c) { return !Shichinin.isClusterBlockedForHousehold(c); })
+    .map(function (c) { return Shichinin.filterClusterForHousehold(c, household); });
 };
 
-Schroeder.ADULT_LIFE_CLUSTER_ID = 'adultlife';
+Shichinin.ADULT_LIFE_CLUSTER_ID = 'adultlife';
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Clusters;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Clusters;

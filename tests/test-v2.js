@@ -5,16 +5,16 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const { test, assert, assertEqual, assertRejects, Schroeder } = require('./harness');
-const Local = Schroeder.LocalPersonaProvider;
-const Spark = Schroeder.SparkPersonaProvider;
-const Engine = Schroeder.PersonaEngine;
-const Sch = Schroeder.Scheduler;
-const Settings = Schroeder.Settings;
-const Pool = Schroeder.CookiePool;
-const Rng = Schroeder.Rng;
-const Canaries = Schroeder.Canaries;
-const Evidence = Schroeder.Evidence;
+const { test, assert, assertEqual, assertRejects, Shichinin } = require('./harness');
+const Local = Shichinin.LocalPersonaProvider;
+const Spark = Shichinin.SparkPersonaProvider;
+const Engine = Shichinin.PersonaEngine;
+const Sch = Shichinin.Scheduler;
+const Settings = Shichinin.Settings;
+const Pool = Shichinin.CookiePool;
+const Rng = Shichinin.Rng;
+const Canaries = Shichinin.Canaries;
+const Evidence = Shichinin.Evidence;
 
 function cookie(name, domain, value, extra) {
   return Object.assign({
@@ -212,7 +212,7 @@ test('signed-in search removed: google can never be enabled, legacy flags are in
 // ----- tag weighting --------------------------------------------------------------
 
 test('tagScore: every cluster site carries a curated score and revisit flag', () => {
-  for (const c of Schroeder.Clusters) {
+  for (const c of Shichinin.Clusters) {
     assert(c.sites.length >= 4, c.id + ' has at least 4 sites (reddit destinations removed in v0.4.0)');
     for (const s of c.sites) {
       assert(typeof s === 'object' && s.url && /^https:\/\//.test(s.url), c.id + ' site is an entry object');
@@ -293,13 +293,13 @@ test('spark itinerary: steps are built locally from the narrative paraphrases', 
   });
   assert(steps.length >= 3, 'steps built');
   for (const st of steps) {
-    assert(Schroeder.Actions.isAllowed(st.action), 'step allowlisted');
+    assert(Shichinin.Actions.isAllowed(st.action), 'step allowlisted');
     if (st.action === 'search') {
       assert(['my paraphrased starter question', 'my paraphrased marathon question']
         .indexOf(st.query) !== -1, 'search query comes from the narrative: ' + st.query);
     }
     if (st.action === 'visit') {
-      assert(Schroeder.ClusterById[st.clusterId] || st.canary,
+      assert(Shichinin.ClusterById[st.clusterId] || st.canary,
         'visit cluster is a curated cluster');
     }
   }
@@ -319,7 +319,7 @@ test('canaries: four planted interests, cluster-shaped, absent from the baseline
     assertEqual(c.canary, true, c.id + ' marked canary');
     assert(c.sites.length >= 4, c.id + ' has at least 4 sites (reddit destinations removed in v0.4.0)');
     assertEqual(c.queries.length, 8, c.id + ' has 8 queries');
-    assert(!Schroeder.ClusterById[c.id], c.id + ' is not a regular cluster');
+    assert(!Shichinin.ClusterById[c.id], c.id + ' is not a regular cluster');
     assert(c.synonyms.length >= 3, c.id + ' has synonyms for Evidence Lab matching');
     for (const syn of c.synonyms) {
       assert(baselineText.indexOf(syn) === -1,
@@ -338,7 +338,7 @@ test('canaries: about 15% of a persona budget is canary emissions', async () => 
   const share = canarySteps.length / steps.length;
   assert(share >= 0.08 && share <= 0.25, 'canary share ~15%, got ' + share.toFixed(2));
   assert(canarySteps.every(st => st.canaryId === personas[0].canaryId), 'emissions use the assigned canary');
-  assert(canarySteps.every(st => Schroeder.Actions.isAllowed(st.action)), 'canary steps allowlisted');
+  assert(canarySteps.every(st => Shichinin.Actions.isAllowed(st.action)), 'canary steps allowlisted');
 });
 
 test('canaries: emissions are logged with timestamps via the store', async () => {
@@ -360,7 +360,7 @@ test('canaries: emissions are logged with timestamps via the store', async () =>
   vm.runInThisContext(
     fs.readFileSync(path.join(__dirname, '..', 'src', 'lib', 'store.js'), 'utf8'),
     { filename: 'store.js' });
-  const Store = Schroeder.Store;
+  const Store = Shichinin.Store;
   await Store.logCanaryEmission({
     canaryId: 'canary-axolotl', personaId: 'p1', action: 'search',
     query: 'axolotl breeding setup tank', ts: 1793200000000
@@ -383,7 +383,7 @@ test('evidence: free-text snapshots parse on newlines, commas and middle dots', 
     JSON.stringify(['A', 'B', 'C', 'D', 'E']));
 });
 
-test('evidence: diff vs the shipped baseline separates retained, added and removed', () => {
+test('evidence: diff vs the Oct 28 baseline separates retained, added and removed', () => {
   const snap = {
     googleTopics: Evidence.BASELINE.googleTopics.slice(1).concat(['Underwater Basket Weaving']),
     googleBrands: Evidence.BASELINE.googleBrands.concat(['Chewy']),
@@ -392,9 +392,9 @@ test('evidence: diff vs the shipped baseline separates retained, added and remov
     daaStatus: Evidence.BASELINE.daaStatus
   };
   const diff = Evidence.diffSnapshot(snap);
-  assertEqual(diff.googleTopics.retained.length, 5);
+  assertEqual(diff.googleTopics.retained.length, 19);
   assertEqual(JSON.stringify(diff.googleTopics.added), JSON.stringify(['Underwater Basket Weaving']));
-  assertEqual(JSON.stringify(diff.googleTopics.removed), JSON.stringify(['Sample Topic — Travel']));
+  assertEqual(JSON.stringify(diff.googleTopics.removed), JSON.stringify(['TV Shows & Programs']));
   assertEqual(JSON.stringify(diff.googleBrands.added), JSON.stringify(['Chewy']));
   assertEqual(diff.metaTopics.removed.length, 0);
   assertEqual(diff.daaChanged, false);

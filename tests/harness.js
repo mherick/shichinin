@@ -1,4 +1,4 @@
-// Schroeder test harness: loads the extension's lib files the same way
+// Shichinin test harness: loads the extension's lib files the same way
 // the browser does (ordered classic scripts sharing one global), then
 // runs registered tests. No dependencies.
 'use strict';
@@ -59,4 +59,4 @@ async function run() {
   if (failed) process.exitCode = 1;
 }
 
-module.exports = { test, assert, assertEqual, assertMatch, assertRejects, run, Schroeder: global.Schroeder };
+module.exports = { test, assert, assertEqual, assertMatch, assertRejects, run, Shichinin: global.Shichinin };

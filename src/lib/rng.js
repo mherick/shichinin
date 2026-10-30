@@ -1,9 +1,9 @@
-// Schroeder — seedable PRNG + small random helpers.
+// Shichinin — seedable PRNG + small random helpers.
 // Used everywhere instead of Math.random so personas/itineraries are
 // reproducible per day-seed (and unit-testable).
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Rng = (function () {
+Shichinin.Rng = (function () {
   // FNV-1a string hash -> uint32 seed.
   function hashSeed(str) {
     var h = 0x811c9dc5;
@@ -47,4 +47,4 @@ Schroeder.Rng = (function () {
   return { hashSeed: hashSeed, create: create };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Rng;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Rng;

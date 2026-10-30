@@ -1,4 +1,4 @@
-// Schroeder — content script.
+// Shichinin — content script.
 // Jobs:
 //   1. Consent posture: find an "Accept all" consent control and activate
 //      it (logged). If there is no confident accept-all, do nothing.
@@ -15,11 +15,11 @@
   'use strict';
   if (window.top !== window) return; // top frame only
 
-  var S = Schroeder;
+  var S = Shichinin;
 
   function sanctionedClick(el, kind) {
     if (kind !== 'consent-accept' && kind !== 'search') {
-      throw new Error('Schroeder design law: unsanctioned activation kind "' + kind + '"');
+      throw new Error('Shichinin design law: unsanctioned activation kind "' + kind + '"');
     }
     S.Actions.assertAllowed(kind);
     el.click();
@@ -27,7 +27,7 @@
 
   function sendLog(kind, detail) {
     try {
-      chrome.runtime.sendMessage({ type: 'SCHROEDER_LOG', kind: kind, detail: detail });
+      chrome.runtime.sendMessage({ type: 'SHICHININ_LOG', kind: kind, detail: detail });
     } catch (e) { /* extension context may be gone; ignore */ }
   }
 
@@ -155,7 +155,7 @@
   }
 
   function performSearch(step) {
-    var flagKey = 'schroeder_step_' + step.id;
+    var flagKey = 'shichinin_step_' + step.id;
     if (sessionStorage.getItem(flagKey) === 'searched') {
       return Promise.resolve('already-searched'); // we are on the results page
     }
@@ -184,7 +184,7 @@
 
   function reportDone(outcome) {
     try {
-      chrome.runtime.sendMessage({ type: 'SCHROEDER_STEP_DONE', outcome: outcome });
+      chrome.runtime.sendMessage({ type: 'SHICHININ_STEP_DONE', outcome: outcome });
     } catch (e) { /* ignore */ }
   }
 
@@ -221,7 +221,7 @@
 
       if (settings.paused || hostPaused) return;
 
-      chrome.runtime.sendMessage({ type: 'SCHROEDER_GET_INSTRUCTIONS' })
+      chrome.runtime.sendMessage({ type: 'SHICHININ_GET_INSTRUCTIONS' })
         .then(function (resp) {
           if (resp && resp.step) executeStep(resp.step, settings);
         })

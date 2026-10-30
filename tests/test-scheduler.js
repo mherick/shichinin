@@ -1,7 +1,7 @@
 // Scheduler math tests.
-const { test, assert, assertEqual, Schroeder } = require('./harness');
-const Sch = Schroeder.Scheduler;
-const Rng = Schroeder.Rng;
+const { test, assert, assertEqual, Shichinin } = require('./harness');
+const Sch = Shichinin.Scheduler;
+const Rng = Shichinin.Rng;
 
 test('levels: HIGH is 3-4 personas; budgets and cadences order correctly', () => {
   const low = Sch.levelConfig('low'), med = Sch.levelConfig('medium'), high = Sch.levelConfig('high');
@@ -75,7 +75,7 @@ test('dateKeyOf: pads month and day', () => {
 });
 
 test('settings: pause matching is exact-or-subdomain, and defaults protect banks', () => {
-  const Settings = Schroeder.Settings;
+  const Settings = Shichinin.Settings;
   const paused = Settings.DEFAULTS.pausedSites;
   assert(Settings.isHostPaused('chase.com', paused));
   assert(Settings.isHostPaused('www.chase.com', paused), 'www prefix normalized');
@@ -86,7 +86,7 @@ test('settings: pause matching is exact-or-subdomain, and defaults protect banks
 });
 
 test('settings: merge keeps defaults for missing keys', () => {
-  const Settings = Schroeder.Settings;
+  const Settings = Shichinin.Settings;
   const merged = Settings.merge({ paused: true });
   assertEqual(merged.paused, true);
   assertEqual(merged.aggressiveness, 'high', 'default aggressiveness is high');

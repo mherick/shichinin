@@ -1,4 +1,4 @@
-// Schroeder — SparkPersonaProvider (v2, Wonder build).
+// Shichinin — SparkPersonaProvider (v2, Wonder build).
 //
 // v1's provider asked the model for executable itinerary steps. v2 demotes
 // the model to ARC AUTHOR: Spark returns ONLY a persona NARRATIVE — a
@@ -22,9 +22,9 @@
 // error as v1 and the engine falls back. The live path stays untested
 // against the real API (no key in this build); fake-fetch tests cover
 // the schema.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.SparkPersonaProvider = (function () {
+Shichinin.SparkPersonaProvider = (function () {
   var API_URL = 'https://api.meta.ai/v1/chat/completions';
   var MODEL = 'muse-spark-1.3';
   var ARC_STAGES = ['browse', 'compare', 'brand'];
@@ -36,17 +36,17 @@ Schroeder.SparkPersonaProvider = (function () {
 
     function noKeyError() {
       var err = new Error('SparkPersonaProvider: no modelApiKey configured ' +
-        '(set one in the Schroeder dashboard, or leave blank to use the local provider).');
+        '(set one in the Shichinin dashboard, or leave blank to use the local provider).');
       err.code = 'NO_KEY';
       return err;
     }
 
     function clusterIdList() {
-      return (Schroeder.Clusters || []).map(function (c) { return c.id; });
+      return (Shichinin.Clusters || []).map(function (c) { return c.id; });
     }
 
     function buildRequestBody(kind, payload) {
-      var system = 'You are the arc author for Schroeder, a tracking-' +
+      var system = 'You are the arc author for Shichinin, a tracking-' +
         'pollution browser tool. You write persona NARRATIVES only. You ' +
         'never output steps, URLs, or actions. Respond with ONLY valid ' +
         'JSON, no prose.';
@@ -125,7 +125,7 @@ Schroeder.SparkPersonaProvider = (function () {
             ' must choose exactly 2 clusterIds from clusters.js');
         }
         ids.forEach(function (id) {
-          if (!Schroeder.ClusterById || !Schroeder.ClusterById[id]) {
+          if (!Shichinin.ClusterById || !Shichinin.ClusterById[id]) {
             throw new Error('SparkPersonaProvider: unknown cluster id "' +
               String(id) + '" — clusters can only come from clusters.js');
           }
@@ -160,7 +160,7 @@ Schroeder.SparkPersonaProvider = (function () {
           displayName: String(p.displayName || 'Spark persona'),
           archetype: String(p.archetype || ''),
           clusterIds: ids.slice(),
-          clusterLabels: ids.map(function (id) { return Schroeder.ClusterById[id].label; }),
+          clusterLabels: ids.map(function (id) { return Shichinin.ClusterById[id].label; }),
           queryParaphrases: paraphrases,
           arcStages: stages
         };
@@ -201,7 +201,7 @@ Schroeder.SparkPersonaProvider = (function () {
       var localOpts = {};
       for (var k in opts) localOpts[k] = opts[k];
       localOpts.queryOverrides = persona.narrative.queryParaphrases || {};
-      return Schroeder.LocalPersonaProvider.generateItinerary(localOpts);
+      return Shichinin.LocalPersonaProvider.generateItinerary(localOpts);
     }
 
     return {
@@ -216,4 +216,4 @@ Schroeder.SparkPersonaProvider = (function () {
   return { create: create, API_URL: API_URL, MODEL: MODEL, ARC_STAGES: ARC_STAGES };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.SparkPersonaProvider;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.SparkPersonaProvider;

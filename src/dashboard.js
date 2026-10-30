@@ -1,9 +1,9 @@
-// Schroeder dashboard (v3): plain-language, novice-first.
-// Shows today's decoys, everyday settings, the sites Schroeder leaves
+// Shichinin dashboard (v3): plain-language, novice-first.
+// Shows today's decoys, everyday settings, the sites Shichinin leaves
 // alone, advanced settings (own Meta AI key), and recent activity.
 // Same messages and storage as before — UI only.
 (function () {
-  var S = Schroeder;
+  var S = Shichinin;
   var settings = null;
 
   function $(id) { return document.getElementById(id); }
@@ -13,7 +13,7 @@
   var HOUSEHOLD_EXPLAINERS = {
     adults: 'Decoys are all grown-ups. Trackers see an adults-only home, so marketing aimed at children has nothing to aim at here.',
     child: 'Decoys are still grown-ups, and they run at full strength. A child\u2019s real clicks get buried under adult noise \u2014 the profile trackers build is of adults.',
-    mixed: 'Standard Schroeder: rotating decoys scramble the profile in every direction.'
+    mixed: 'Standard Shichinin: rotating decoys scramble the profile in every direction.'
   };
 
   function renderHousehold() {
@@ -38,20 +38,20 @@
     pill.textContent = settings.paused ? 'Paused' : 'On';
     pill.className = 'pill' + (settings.paused ? ' paused' : '');
     var toggle = $('pauseBtn');
-    toggle.textContent = settings.paused ? 'Start Schroeder' : 'Pause Schroeder';
+    toggle.textContent = settings.paused ? 'Start Shichinin' : 'Pause Shichinin';
     toggle.className = 'big-toggle' + (settings.paused ? ' paused' : '');
     var working = $('workingLine');
     working.textContent = settings.paused
-      ? 'Schroeder is paused right now — no decoy activity is happening.'
-      : 'Schroeder is on and working in the background.';
+      ? 'Shichinin is paused right now — no decoy activity is happening.'
+      : 'Shichinin is on and working in the background.';
     working.className = 'working-line' + (settings.paused ? ' paused' : '');
 
     if (plan) {
       var who = plan.providerUsed === 'spark'
         ? 'Spark (Meta AI, using your own key) dreamed up today\'s decoys'
-        : 'Schroeder dreamed up today\'s decoys right on this device';
+        : 'Shichinin dreamed up today\'s decoys right on this device';
       if (plan.fallbackReason) {
-        who = 'Schroeder dreamed up today\'s decoys right on this device ' +
+        who = 'Shichinin dreamed up today\'s decoys right on this device ' +
           '(Spark couldn\'t be reached, so it planned them itself)';
       }
       $('providerNote').textContent = who +
@@ -109,7 +109,7 @@
   }
 
   function refresh() {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_GET_STATE' }).then(render);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_GET_STATE' }).then(render);
   }
 
   function lines(id) {
@@ -124,7 +124,7 @@
     settings.consentAutoAccept = $('setConsent').checked;
     settings.modelApiKey = $('setApiKey').value.trim();
     S.Store.saveSettings(settings).then(function () {
-      chrome.runtime.sendMessage({ type: 'SCHROEDER_REGENERATE' }).then(refresh);
+      chrome.runtime.sendMessage({ type: 'SHICHININ_REGENERATE' }).then(refresh);
     });
   }
 
@@ -135,7 +135,7 @@
       // Household mode shapes the decoy pool itself, so a change means
       // a fresh plan (and, in the worker, a fresh compliant arc).
       S.Store.saveSettings(settings).then(function () {
-        chrome.runtime.sendMessage({ type: 'SCHROEDER_REGENERATE' }).then(refresh);
+        chrome.runtime.sendMessage({ type: 'SHICHININ_REGENERATE' }).then(refresh);
       });
     });
   });
@@ -145,13 +145,13 @@
     S.Store.saveSettings(settings).then(refresh);
   });
   $('regenBtn').addEventListener('click', function () {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_REGENERATE' }).then(refresh);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_REGENERATE' }).then(refresh);
   });
   $('sweepBtn').addEventListener('click', function () {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_SWEEP_NOW' }).then(refresh);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_SWEEP_NOW' }).then(refresh);
   });
   $('clearLogBtn').addEventListener('click', function () {
-    chrome.runtime.sendMessage({ type: 'SCHROEDER_CLEAR_LOG' }).then(refresh);
+    chrome.runtime.sendMessage({ type: 'SHICHININ_CLEAR_LOG' }).then(refresh);
   });
   $('savePausedBtn').addEventListener('click', function () {
     settings.pausedSites = lines('pausedSites');
@@ -162,15 +162,16 @@
   // ----- your Google profile copy ------------------------------------------
   // The Google boxes from the old Evidence section, kept as a plain record:
   // no comparison, no scoring — just the lists, saved in this browser.
-  // SAMPLE placeholders shipped with the public repo — replace with your
-  // own Google My Ad Center lists (captured before you start the decoys).
   var GOOGLE_BASELINE_TOPICS = [
-    'Sample Topic — Travel', 'Sample Topic — Cooking',
-    'Sample Topic — Gardening', 'Sample Topic — Technology',
-    'Sample Topic — Music', 'Sample Topic — Sports'
+    'TV Shows & Programs', 'Internet Service Plans', 'Jewelry',
+    'Pets & Animals', 'Beverages', 'Games', 'Insurance', 'Clothing',
+    'Food', 'Social Networks & Online Communities', 'Restaurants',
+    'Movies & Films', 'Home Furniture', 'Banking', 'Health Care Services',
+    'Music & Audio', 'Building Construction & Maintenance',
+    'Motor Vehicles', 'TV Broadcasting', 'Vehicle Dealers'
   ];
   var GOOGLE_BASELINE_BRANDS = [
-    'Sample Brand A', 'Sample Brand B', 'Sample Brand C'
+    'Walmart', 'Amazon.com', 'Apple', 'Capital One', 'Mazda Motor Corporation'
   ];
 
   function listLines(id) {

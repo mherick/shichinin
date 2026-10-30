@@ -4,14 +4,14 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { test, assert, assertEqual, Schroeder } = require('./harness');
-const Local = Schroeder.LocalPersonaProvider;
-const Spark = Schroeder.SparkPersonaProvider;
-const Engine = Schroeder.PersonaEngine;
-const Sch = Schroeder.Scheduler;
+const { test, assert, assertEqual, Shichinin } = require('./harness');
+const Local = Shichinin.LocalPersonaProvider;
+const Spark = Shichinin.SparkPersonaProvider;
+const Engine = Shichinin.PersonaEngine;
+const Sch = Shichinin.Scheduler;
 
 test('household: settings default is adults; unknown values fall back to adults', () => {
-  const Settings = Schroeder.Settings;
+  const Settings = Shichinin.Settings;
   assertEqual(Settings.DEFAULTS.household, 'adults', 'DEFAULTS.household is adults');
   assertEqual(Settings.merge({}).household, 'adults', 'merge defaults to adults');
   assertEqual(Settings.merge({ household: 'child' }).household, 'child', 'child survives merge');
@@ -33,7 +33,7 @@ test('household: adults and child modes yield 100% adult personas (60 samples ea
         assert(Local.AGE_BANDS.indexOf(p.ageBand) !== -1,
           mode + ': ageBand is an adult band, got ' + p.ageBand);
         for (const id of p.clusterIds) {
-          assert(Schroeder.clusterAllowedForHousehold(id, mode),
+          assert(Shichinin.clusterAllowedForHousehold(id, mode),
             mode + ': cluster allowed in protective mode: ' + id);
         }
       }
@@ -56,7 +56,7 @@ test('household: adult-life cluster always rotates in protective modes', async (
 
 test('household: pool scan — no blocklisted term reachable in protective modes', () => {
   for (const mode of ['adults', 'child']) {
-    const pool = Schroeder.householdClusters(mode);
+    const pool = Shichinin.householdClusters(mode);
     assert(pool.length >= 12, mode + ': protective pool still has breadth, got ' + pool.length);
     assert(!pool.some(c => c.id === 'newparent'), mode + ': parenting cluster is out of the pool');
     const texts = [];
@@ -66,20 +66,20 @@ test('household: pool scan — no blocklisted term reachable in protective modes
       (c.queries || []).forEach(q => texts.push(q));
     });
     // Canary clusters feed protective-mode itineraries too.
-    Schroeder.Canaries.CANARIES.forEach(c => {
+    Shichinin.Canaries.CANARIES.forEach(c => {
       texts.push(c.label, c.archetype);
       c.sites.forEach(s => texts.push(s.url));
       c.queries.forEach(q => texts.push(q));
     });
     for (const t of texts) {
-      assert(!Schroeder.isChildContent(t),
+      assert(!Shichinin.isChildContent(t),
         mode + ': no blocklisted term in protective pool text: ' + JSON.stringify(t));
     }
   }
   // Mixed mode keeps the full bank, parenting cluster included.
-  const mixed = Schroeder.householdClusters('mixed');
+  const mixed = Shichinin.householdClusters('mixed');
   assert(mixed.some(c => c.id === 'newparent'), 'mixed: parenting cluster still available');
-  assertEqual(mixed.length, Schroeder.Clusters.length, 'mixed: full cluster bank');
+  assertEqual(mixed.length, Shichinin.Clusters.length, 'mixed: full cluster bank');
 });
 
 test('household: protective itinerary emits no child content, even for a tainted persona', async () => {
@@ -99,12 +99,12 @@ test('household: protective itinerary emits no child content, even for a tainted
     for (const s of steps) {
       assert(s.clusterId !== 'newparent', mode + ': no steps from the blocked cluster');
       if (s.action === 'search') {
-        assert(!Schroeder.isChildContent(s.query), mode + ': clean query: ' + s.query);
+        assert(!Shichinin.isChildContent(s.query), mode + ': clean query: ' + s.query);
         assert(['duckduckgo', 'brave', 'startpage'].indexOf(s.engine) !== -1,
           mode + ': search engine is account-free: ' + s.engine);
       }
       if (s.action === 'visit') {
-        assert(!Schroeder.isChildContent(s.url), mode + ': clean url: ' + s.url);
+        assert(!Shichinin.isChildContent(s.url), mode + ': clean url: ' + s.url);
       }
     }
   }
@@ -175,9 +175,9 @@ test('household: spark narrative choosing the parenting cluster falls back to lo
     'fallback personas avoid the parenting cluster');
 });
 
-test('design law: actions.js is byte-identical to v1 (frozen allowlist)', () => {
+test('design law: actions.js matches its pinned sha256 (frozen allowlist; v0.5.1 change is the name only)', () => {
   const file = path.join(__dirname, '..', 'src', 'lib', 'actions.js');
   const hash = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-  assertEqual(hash, '573175a87a5d06142d2b66c4d296e885e7a8fc0d5b1d29b37745dfad913eb02e',
-    'actions.js sha256 unchanged');
+  assertEqual(hash, '67a9f83d7130fb09e0608273828ffaadafadaf95cbd5ffe6fd0c88c9f39a4ffd',
+    'actions.js sha256 matches the pinned v0.5.1 value');
 });

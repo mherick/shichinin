@@ -1,8 +1,8 @@
 // Persona generation, itinerary generation, provider fallback tests.
-const { test, assert, assertEqual, assertRejects, Schroeder } = require('./harness');
-const Local = Schroeder.LocalPersonaProvider;
-const Spark = Schroeder.SparkPersonaProvider;
-const Engine = Schroeder.PersonaEngine;
+const { test, assert, assertEqual, assertRejects, Shichinin } = require('./harness');
+const Local = Shichinin.LocalPersonaProvider;
+const Spark = Shichinin.SparkPersonaProvider;
+const Engine = Shichinin.PersonaEngine;
 
 test('local personas: shape and cluster integrity', async () => {
   const personas = await Local.generatePersonas({ count: 4, seed: '2026-10-27' });
@@ -13,7 +13,7 @@ test('local personas: shape and cluster integrity', async () => {
       'persona has 2-3 clusters, got ' + p.clusterIds.length);
     assertEqual(p.clusterLabels.length, p.clusterIds.length);
     for (const id of p.clusterIds) {
-      assert(Schroeder.ClusterById[id], 'cluster id exists: ' + id);
+      assert(Shichinin.ClusterById[id], 'cluster id exists: ' + id);
     }
   }
 });
@@ -33,7 +33,7 @@ test('local personas: cluster variety across a week of seeds', async () => {
     personas.forEach(p => p.clusterIds.forEach(id => seen.add(id)));
   }
   assert(seen.size >= 12, 'expected >= 12 distinct clusters in a week, got ' + seen.size);
-  assert(Schroeder.Clusters.length >= 12, 'cluster bank itself has >= 12 clusters');
+  assert(Shichinin.Clusters.length >= 12, 'cluster bank itself has >= 12 clusters');
 });
 
 test('itinerary: budget cap respected, all actions allowlisted', async () => {
@@ -44,7 +44,7 @@ test('itinerary: budget cap respected, all actions allowlisted', async () => {
   assert(steps.length >= 3 && steps.length <= 16,
     'steps within budget, got ' + steps.length);
   for (const s of steps) {
-    assert(Schroeder.Actions.isAllowed(s.action), 'step action allowlisted: ' + s.action);
+    assert(Shichinin.Actions.isAllowed(s.action), 'step action allowlisted: ' + s.action);
     assert(s.action === 'visit' || s.action === 'search', 'step is visit/search');
     if (s.action === 'visit') assert(/^https:\/\//.test(s.url), 'visit has https url');
     if (s.action === 'search') {

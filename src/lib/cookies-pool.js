@@ -1,4 +1,4 @@
-// Schroeder — cookie pool manager.
+// Shichinin — cookie pool manager.
 // buildRotationPlan() is pure and unit-tested. runSweep() is the browser
 // side: it inventories chrome.cookies, plans, executes, and logs.
 //
@@ -9,11 +9,11 @@
 //  - Rotatable values are replaced with same-shape generated values.
 //  - Signed (server-validated) values are expired instead — a tampered
 //    signed value would be rejected anyway; expiry frays stitching too.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.CookiePool = (function () {
-  var Classify = Schroeder.CookieClassify;
-  var Actions = Schroeder.Actions;
+Shichinin.CookiePool = (function () {
+  var Classify = Shichinin.CookieClassify;
+  var Actions = Shichinin.Actions;
 
   function buildRotationPlan(cookies, opts, rng) {
     var safeMode = !opts || opts.safeMode !== false;
@@ -162,4 +162,4 @@ Schroeder.CookiePool = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.CookiePool;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.CookiePool;

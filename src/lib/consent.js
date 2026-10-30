@@ -1,6 +1,6 @@
-// Schroeder — consent-banner "Accept all" matcher (pure logic).
+// Shichinin — consent-banner "Accept all" matcher (pure logic).
 //
-// Schroeder's posture is maximal cooperation: consent banners get
+// Shichinin's posture is maximal cooperation: consent banners get
 // "Accept all". The matcher is deliberately conservative to guarantee we
 // never click anything else:
 //   - Strong accept phrases ("accept all", "allow all cookies") match
@@ -13,9 +13,9 @@
 //     Sourcepoint, Quantcast) match directly.
 // The content script turns DOM elements into descriptors and calls
 // findAcceptCandidate(); -1 means "do nothing", which is always safe.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Consent = (function () {
+Shichinin.Consent = (function () {
   var KNOWN_CMP_IDS = [
     'onetrust-accept-btn-handler',
     'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll',
@@ -114,4 +114,4 @@ Schroeder.Consent = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Consent;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Consent;

@@ -1,8 +1,8 @@
 // Action allowlist (design law) + consent matcher + storage litter tests.
 const fs = require('fs');
 const path = require('path');
-const { test, assert, assertEqual, Schroeder } = require('./harness');
-const A = Schroeder.Actions;
+const { test, assert, assertEqual, Shichinin } = require('./harness');
+const A = Shichinin.Actions;
 const SRC = path.join(__dirname, '..', 'src');
 
 test('allowlist: contains the sanctioned action vocabulary', () => {
@@ -53,7 +53,7 @@ test('design law: no ad-network interaction strings in executors', () => {
 
 // ----- consent matcher ------------------------------------------------------
 
-const Consent = Schroeder.Consent;
+const Consent = Shichinin.Consent;
 function cand(text, context, id, className) {
   return { text, context: context || '', id: id || '', className: className || '' };
 }
@@ -99,7 +99,7 @@ test('consent: foreign-language accept-all matches (strong phrase)', () => {
 
 // ----- storage litter ---------------------------------------------------------
 
-const Litter = Schroeder.StorageLitter;
+const Litter = Shichinin.StorageLitter;
 
 test('litter: allowlist matches analytics keys only', () => {
   assert(Litter.matchKey('ajs_anonymous_id'), 'segment anon id should match');
@@ -112,7 +112,7 @@ test('litter: allowlist matches analytics keys only', () => {
 });
 
 test('litter: seed values have plausible shapes', () => {
-  const rng = Schroeder.Rng.create('litter-test');
+  const rng = Shichinin.Rng.create('litter-test');
   const seg = Litter.matchKey('ajs_anonymous_id');
   const v = Litter.generateSeedValue(seg, rng);
   assert(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(v),

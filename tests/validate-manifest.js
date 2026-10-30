@@ -12,7 +12,7 @@ function check(cond, msg) { if (!cond) problems.push(msg); }
 
 check(manifest.manifest_version === 3, 'manifest_version must be 3');
 check(manifest.name === 'Shichinin', 'name must be Shichinin');
-check(manifest.version === '0.5.0', 'version must be 0.5.0');
+check(manifest.version === '0.5.1', 'version must be 0.5.1');
 check(manifest.background && manifest.background.service_worker, 'background service worker declared');
 
 const refs = [];

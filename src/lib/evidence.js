@@ -1,32 +1,37 @@
-// Schroeder — Evidence Lab. Works only with REAL evidence:
+// Shichinin — Evidence Lab (v2, Wonder build). Replaces the v1
+// signal-to-noise "estimate", which was arithmetic on local counters
+// dressed as a measurement. This module works only with REAL evidence:
 // structured snapshots of what Google My Ad Center, Meta Ad Preferences
-// and the DAA registry actually show, diffed locally against a baseline
-// the user captures from their own accounts — plus canary matching
+// and the DAA registry actually show, diffed locally against the
+// pre-pollution baseline captured Oct 28, 2026 — plus canary matching
 // (see canary.js) for causal attribution. All local; nothing is scraped
 // and no extra permissions are needed — the user pastes what the pages
-// show.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+// show, exactly as the baseline was captured.
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Evidence = (function () {
-  // SAMPLE baseline shipped with the public repo so the shape of a
-  // baseline is visible. It is NOT real data. Capture your own baseline
-  // (extension paused, before you start) and replace these values.
+Shichinin.Evidence = (function () {
+  // Pre-loaded from ~/workspace/shichinin/test-evidence/
+  // BASELINE-DIGEST-2026-10-28.md §1-2 (Shichinin PAUSED — pre-pollution).
   var BASELINE = Object.freeze({
-    capturedAt: 'SAMPLE',
-    source: 'SAMPLE baseline — replace with your own capture: Google My Ad Center + Meta Accounts Center → Ad preferences + DAA WebChoices',
+    capturedAt: '2026-10-28',
+    source: 'Google My Ad Center + Meta Accounts Center → Ad preferences + DAA WebChoices, Oct 28 2026, Shichinin paused',
     googleTopics: Object.freeze([
-      'Sample Topic — Travel', 'Sample Topic — Cooking',
-      'Sample Topic — Gardening', 'Sample Topic — Technology',
-      'Sample Topic — Music', 'Sample Topic — Sports'
+      'TV Shows & Programs', 'Internet Service Plans', 'Jewelry',
+      'Pets & Animals', 'Beverages', 'Games', 'Insurance', 'Clothing',
+      'Food', 'Social Networks & Online Communities', 'Restaurants',
+      'Movies & Films', 'Home Furniture', 'Banking', 'Health Care Services',
+      'Music & Audio', 'Building Construction & Maintenance',
+      'Motor Vehicles', 'TV Broadcasting', 'Vehicle Dealers'
     ]),
     googleBrands: Object.freeze([
-      'Sample Brand A', 'Sample Brand B', 'Sample Brand C'
+      'Walmart', 'Amazon.com', 'Apple', 'Capital One', 'Mazda Motor Corporation'
     ]),
     metaTopics: Object.freeze([
-      'Sample Meta Topic A', 'Sample Meta Topic B'
+      'Business consulting', 'Shirts & tank tops', 'Home installation & assembly'
     ]),
-    metaActivity: Object.freeze(['Sample Advertiser A', 'Sample Advertiser B']),
-    daaStatus: 'SAMPLE — no DAA status captured'
+    // §2 preview row: advertisers shown on the main Ad preferences page.
+    metaActivity: Object.freeze(['Fieldy.ai', 'MBA at Rice', 'ReubenGeimah']),
+    daaStatus: '99 participating companies, every one "No Choice Set"; Protect My Choices: not detected'
   });
 
   var FIELDS = ['googleTopics', 'googleBrands', 'metaTopics', 'metaActivity'];
@@ -74,8 +79,8 @@ Schroeder.Evidence = (function () {
   function analyze(snapshot, baseline) {
     var snap = normalizeSnapshot(snapshot);
     var diff = diffSnapshot(snap, baseline);
-    var canaryHits = (Schroeder.Canaries && Schroeder.Canaries.matchSnapshot)
-      ? Schroeder.Canaries.matchSnapshot(snap) : [];
+    var canaryHits = (Shichinin.Canaries && Shichinin.Canaries.matchSnapshot)
+      ? Shichinin.Canaries.matchSnapshot(snap) : [];
     var totals = { added: 0, removed: 0, retained: 0 };
     FIELDS.forEach(function (k) {
       totals.added += diff[k].added.length;
@@ -107,4 +112,4 @@ Schroeder.Evidence = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Evidence;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Evidence;

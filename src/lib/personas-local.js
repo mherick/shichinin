@@ -1,4 +1,4 @@
-// Schroeder — LocalPersonaProvider (the default, fully working provider).
+// Shichinin — LocalPersonaProvider (the default, fully working provider).
 //
 // v2 (Wonder build) — PERSISTENT PERSONA ARCS IN SESSION BURSTS.
 // v1 reshuffled 2-3 random clusters per persona per day and sprayed the
@@ -45,9 +45,9 @@
 //            url?, engine?, query?, dwellSec: [min, max],
 //            sessionIndex, canary?, revisit? }
 // Every step action is asserted against the design-law allowlist.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.LocalPersonaProvider = (function () {
+Shichinin.LocalPersonaProvider = (function () {
   var FIRST_NAMES = [
     'Maya', 'Jordan', 'Priya', 'Marcus', 'Elena', 'Tom', 'Aisha', 'Leo',
     'Nora', 'Felix', 'June', 'Omar', 'Iris', 'Hugo', 'Tara', 'Ben',
@@ -128,18 +128,18 @@ Schroeder.LocalPersonaProvider = (function () {
   }
 
   function generatePersonas(opts) {
-    var rng = Schroeder.Rng.create('personas:' + opts.seed);
+    var rng = Shichinin.Rng.create('personas:' + opts.seed);
     // Household pool: protective modes exclude child-directed /
     // parenting clusters (see clusters.js); 'mixed' (or no mode, the
     // v0.4.0 back-compat path) draws from the full bank.
-    var clusters = Schroeder.householdClusters
-      ? Schroeder.householdClusters(opts.household)
-      : Schroeder.Clusters;
-    var protective = Schroeder.isProtectiveHousehold
-      ? Schroeder.isProtectiveHousehold(opts.household) : false;
+    var clusters = Shichinin.householdClusters
+      ? Shichinin.householdClusters(opts.household)
+      : Shichinin.Clusters;
+    var protective = Shichinin.isProtectiveHousehold
+      ? Shichinin.isProtectiveHousehold(opts.household) : false;
     var adultLife = null;
     clusters.forEach(function (c) { if (c.id === 'adultlife') adultLife = c; });
-    var canaryIds = (Schroeder.Canaries && Schroeder.Canaries.CANARY_IDS) || [];
+    var canaryIds = (Shichinin.Canaries && Shichinin.Canaries.CANARY_IDS) || [];
     var usedFirstNames = {};
     var personas = [];
     for (var i = 0; i < opts.count; i++) {
@@ -179,7 +179,7 @@ Schroeder.LocalPersonaProvider = (function () {
   function generateItinerary(opts) {
     var persona = opts.persona;
     var budget = Math.max(3, opts.budget || 12);
-    var rng = Schroeder.Rng.create('itinerary:' + opts.dateKey + ':' + persona.id);
+    var rng = Shichinin.Rng.create('itinerary:' + opts.dateKey + ':' + persona.id);
     var engines = ENGINES_ANON; // the only engine set — no signed-in path exists
     var stage = opts.arcStage || 'browse';
     var yesterdayUrls = opts.yesterdayUrls || [];
@@ -192,17 +192,17 @@ Schroeder.LocalPersonaProvider = (function () {
     // an older build — a protective mode never emits a child-directed
     // destination or search. Clusters resolve through the item-level
     // filter, and query override pools are filtered the same way.
-    var protective = Schroeder.isProtectiveHousehold
-      ? Schroeder.isProtectiveHousehold(opts.household) : false;
+    var protective = Shichinin.isProtectiveHousehold
+      ? Shichinin.isProtectiveHousehold(opts.household) : false;
     function resolveCluster(clusterLike) {
       if (!clusterLike || !protective) return clusterLike;
-      return Schroeder.filterClusterForHousehold(clusterLike, opts.household);
+      return Shichinin.filterClusterForHousehold(clusterLike, opts.household);
     }
 
     function queryFor(clusterLike, clusterId) {
       var pool = overrides[clusterId] || stageQueries(clusterLike, stage);
       if (protective) {
-        pool = pool.filter(function (q) { return !Schroeder.isChildContent(q); });
+        pool = pool.filter(function (q) { return !Shichinin.isChildContent(q); });
         if (!pool.length) pool = stageQueries(clusterLike, stage);
       }
       var q = rng.pick(pool);
@@ -217,7 +217,7 @@ Schroeder.LocalPersonaProvider = (function () {
       return {
         id: persona.id + '-' + opts.dateKey + '-' + (seq++),
         personaId: persona.id, clusterId: clusterId,
-        action: Schroeder.Actions.assertAllowed('search'),
+        action: Shichinin.Actions.assertAllowed('search'),
         engine: engine.id, engineHome: engine.home,
         resultsPrefix: engine.resultsPrefix,
         query: queryFor(clusterLike, clusterId),
@@ -232,7 +232,7 @@ Schroeder.LocalPersonaProvider = (function () {
       var step = {
         id: persona.id + '-' + opts.dateKey + '-' + (seq++),
         personaId: persona.id, clusterId: clusterId,
-        action: Schroeder.Actions.assertAllowed('visit'),
+        action: Shichinin.Actions.assertAllowed('visit'),
         url: visitOpts.url || siteUrl(entry),
         dwellSec: visitOpts.deep ? [45, 110] : [25, 110],
         sessionIndex: sessionIndex
@@ -253,14 +253,14 @@ Schroeder.LocalPersonaProvider = (function () {
 
     for (var s = 0; s < sessionCount; s++) {
       var clusterId = clusterIds[s % clusterIds.length];
-      var cluster = resolveCluster(Schroeder.ClusterById[clusterId]);
+      var cluster = resolveCluster(Shichinin.ClusterById[clusterId]);
       if (!cluster) continue;
       // A blocked cluster (e.g. a parenting cluster on an arc authored
       // before Household mode existed) yields no steps at all in a
       // protective mode — its filtered site/query banks are not used,
       // and the session is simply skipped.
       if (protective && !(cluster.sites || []).length && !(cluster.queries || []).length) continue;
-      if (protective && Schroeder.isClusterBlockedForHousehold(cluster)) continue;
+      if (protective && Shichinin.isClusterBlockedForHousehold(cluster)) continue;
       var n = perSession[s];
       for (var pos = 0; pos < n; pos++) {
         if (pos === 0) {
@@ -286,8 +286,8 @@ Schroeder.LocalPersonaProvider = (function () {
     // Canary allocation: convert later fill steps (never a session's
     // opening search/first visit, never the revisit step) into canary
     // steps until ~15% of the budget is canary emissions.
-    var canary = persona.canaryId && Schroeder.Canaries
-      ? resolveCluster(Schroeder.Canaries.ById[persona.canaryId]) : null;
+    var canary = persona.canaryId && Shichinin.Canaries
+      ? resolveCluster(Shichinin.Canaries.ById[persona.canaryId]) : null;
     if (canary && steps.length >= 6) {
       var target = Math.max(1, Math.round(budget * CANARY_SHARE));
       var placed = 0;
@@ -341,4 +341,4 @@ Schroeder.LocalPersonaProvider = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.LocalPersonaProvider;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.LocalPersonaProvider;

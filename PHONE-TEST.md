@@ -22,7 +22,7 @@ Safari is the one iOS browser that supports Web Extensions. An extension can't b
 **Conversion.** Apple provides a command-line converter that wraps an existing extension into an Xcode project:
 
 ```sh
-xcrun safari-web-extension-converter /path/to/schroeder
+xcrun safari-web-extension-converter /path/to/shichinin
 ```
 
 It generates a project with macOS and iOS targets by default, referencing the original extension resources (so Shichinin's JS mostly carries over as-is; the manifest and background model need Safari adjustments — see §4). Apple also offers a **Safari Web Extension Packager**: upload a ZIP in App Store Connect and Apple converts it for TestFlight distribution — but that requires App Store Connect access, i.e. the paid program below.
@@ -78,7 +78,7 @@ Checked against MDN browser-compat-data (via the W3cub mirror) and WebKit releas
 ## 5. Bottom line
 
 **Exact steps, if he wants it anyway:**
-1. On the Mac: run `xcrun safari-web-extension-converter` on the `schroeder/` folder.
+1. On the Mac: run `xcrun safari-web-extension-converter` on the `shichinin/` folder.
 2. Open the generated project in Xcode; sign with his Apple ID (free) — accept the 7-day reinstall loop — or enroll in the $99/yr Developer Program for ~1-year profiles / 90-day TestFlight builds.
 3. Enable Developer Mode on the iPhone, build to the device, enable the extension in Settings → Safari → Extensions, and grant site access.
 4. First verification task in the converted project: confirm `cookies.set`/`remove` actually work on iOS Safari; if they don't, the cookie pool — a core mechanism — doesn't port, and what remains is personas + consent only.

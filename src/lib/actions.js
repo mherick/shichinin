@@ -1,6 +1,6 @@
-// Schroeder — THE DESIGN LAW, AS CODE.
+// Shichinin — THE DESIGN LAW, AS CODE.
 //
-// Schroeder NEVER clicks ads, never follows ad links, never triggers
+// Shichinin NEVER clicks ads, never follows ad links, never triggers
 // conversions, signups, or purchases. That is not a comment-level promise:
 // the automation may only ever dispatch actions from the allowlist below.
 // Every step produced by a persona provider and every step executed by the
@@ -11,9 +11,9 @@
 //   - 'search'         : entering a query on a search engine (may submit
 //                        the search form — that is the search itself)
 // Anything not on the list throws.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Actions = (function () {
+Shichinin.Actions = (function () {
   var ALLOWED_ACTIONS = Object.freeze([
     'visit',           // open a page in a background tab
     'dwell',           // stay on a page for a human-ish duration
@@ -33,7 +33,7 @@ Schroeder.Actions = (function () {
 
   function assertAllowed(type) {
     if (!isAllowed(type)) {
-      throw new Error('Schroeder design law: action "' + String(type) +
+      throw new Error('Shichinin design law: action "' + String(type) +
         '" is not on the automation allowlist. Ad clicks, conversions, ' +
         'signups, purchases and generic clicks are forbidden by design.');
     }
@@ -47,4 +47,4 @@ Schroeder.Actions = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Actions;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Actions;

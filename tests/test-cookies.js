@@ -1,8 +1,8 @@
 // Cookie classifier + rotation plan tests.
-const { test, assert, assertEqual, assertMatch, Schroeder } = require('./harness');
-const C = Schroeder.CookieClassify;
-const Pool = Schroeder.CookiePool;
-const Rng = Schroeder.Rng;
+const { test, assert, assertEqual, assertMatch, Shichinin } = require('./harness');
+const C = Shichinin.CookieClassify;
+const Pool = Shichinin.CookiePool;
+const Rng = Shichinin.Rng;
 
 function cookie(name, domain, value, extra) {
   return Object.assign({
@@ -70,7 +70,7 @@ test('plan (safe mode): rotates trackers only, never protected/functional/unknow
   assertEqual(JSON.stringify(names), JSON.stringify(['_fbp', '_ga']));
   for (const item of plan) {
     assertEqual(item.action, 'cookie-rotate');
-    assert(Schroeder.Actions.isAllowed(item.action), 'plan action must be allowlisted');
+    assert(Shichinin.Actions.isAllowed(item.action), 'plan action must be allowlisted');
   }
   const ga = plan.filter(p => p.cookie.name === '_ga')[0];
   assertMatch(ga.newValue, /^GA1\.2\.\d+\.\d+$/, 'replacement keeps the GA value shape');

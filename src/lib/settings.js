@@ -1,8 +1,8 @@
-// Schroeder — settings: defaults, merging, pause-list matching.
+// Shichinin — settings: defaults, merging, pause-list matching.
 // Settings live in chrome.storage.local under the key "settings".
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Settings = (function () {
+Shichinin.Settings = (function () {
   // Sites where automation must never run by default: banking, payments,
   // government identity surfaces. Users can edit this in the dashboard.
   var DEFAULT_PAUSED_SITES = [
@@ -15,7 +15,7 @@ Schroeder.Settings = (function () {
   // 'child' are the protective modes — decoys are always grown-ups and
   // child-directed/parenting content is never browsed or searched, so
   // the profile trackers build is of adults. 'mixed' is standard
-  // Schroeder (every cluster in rotation). See clusters.js.
+  // Shichinin (every cluster in rotation). See clusters.js.
   var HOUSEHOLD_MODES = ['adults', 'child', 'mixed'];
 
   var DEFAULTS = {
@@ -79,4 +79,4 @@ Schroeder.Settings = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Settings;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Settings;

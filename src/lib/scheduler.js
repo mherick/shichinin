@@ -1,4 +1,4 @@
-// Schroeder — scheduler math (pure functions, unit-tested).
+// Shichinin — scheduler math (pure functions, unit-tested).
 // Aggressiveness levels, daily budgets, time spreading, due-step selection.
 //
 // v2 (Wonder build) additions:
@@ -16,9 +16,9 @@
 //     cookieRotationHours fields for compatibility): v2 rotates once per
 //     persona session via CookiePool.prepareSession — see cookies-pool.js
 //     and background.js.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Scheduler = (function () {
+Shichinin.Scheduler = (function () {
   // HIGH is the shipped default (locked decision, Oct 27).
   var LEVELS = Object.freeze({
     low: Object.freeze({
@@ -218,4 +218,4 @@ Schroeder.Scheduler = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Scheduler;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Scheduler;

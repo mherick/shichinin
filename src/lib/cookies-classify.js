@@ -1,4 +1,4 @@
-// Schroeder — cookie classification + replacement-value generation (pure).
+// Shichinin — cookie classification + replacement-value generation (pure).
 //
 // Classification order matters and is deliberate:
 //   1. Known tracker names/domains  -> 'tracker'   (checked FIRST, because
@@ -9,9 +9,9 @@
 //   4. Heuristic ID-like cookies     -> 'unknown-id' (mutated only when
 //      Safe Mode is OFF)
 //   5. Everything else               -> 'unknown'   (never mutated)
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.CookieClassify = (function () {
+Shichinin.CookieClassify = (function () {
   var TRACKER_NAME_PATTERNS = [
     /^_ga($|_)/, /^_gid$/, /^_gat($|_)/, /^_gcl_/, /^_gads$/, /^_gpi$/,
     /^_fbp$/, /^_fbc$/, /^_hjid$/, /^_hjSession/, /^_hjAbsoluteSession/,
@@ -171,4 +171,4 @@ Schroeder.CookieClassify = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.CookieClassify;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.CookieClassify;

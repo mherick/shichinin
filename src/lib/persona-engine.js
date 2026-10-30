@@ -1,4 +1,4 @@
-// Schroeder — PersonaEngine: provider selection with fallback, plus
+// Shichinin — PersonaEngine: provider selection with fallback, plus
 // (v2, Wonder build) PERSISTENT ARC STATE management.
 //
 // Provider selection is v1's: try Spark, ANY failure (no key, network,
@@ -15,9 +15,9 @@
 // the SAME personas (with today's arcStage/arcDayIndex filled in) while
 // the arc is live, and authors a fresh arc once it expires. Calling
 // without dateKey keeps the v1 behavior (stateless, seed-driven).
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.PersonaEngine = (function () {
+Shichinin.PersonaEngine = (function () {
   var ARC_DAYS = 7;
 
   function dayDiff(fromKey, toKey) {
@@ -28,7 +28,7 @@ Schroeder.PersonaEngine = (function () {
   }
 
   function stageForDay(dayIndex) {
-    return Schroeder.LocalPersonaProvider.stageForDay(dayIndex);
+    return Shichinin.LocalPersonaProvider.stageForDay(dayIndex);
   }
 
   // Household enforcement (v0.5.0). In a protective mode ('adults' /
@@ -39,20 +39,20 @@ Schroeder.PersonaEngine = (function () {
   // cluster) fails validation here and the engine falls back to the
   // local provider, whose pool is household-filtered by construction.
   function householdProtective(opts) {
-    return !!(Schroeder.isProtectiveHousehold &&
-      Schroeder.isProtectiveHousehold(opts.household));
+    return !!(Shichinin.isProtectiveHousehold &&
+      Shichinin.isProtectiveHousehold(opts.household));
   }
 
   function personaViolatesHousehold(p, opts) {
     if (!householdProtective(opts)) return false;
     if (!p || p.adult !== true || !p.ageBand) return true;
     return (p.clusterIds || []).some(function (id) {
-      return !Schroeder.clusterAllowedForHousehold(id, opts.household);
+      return !Shichinin.clusterAllowedForHousehold(id, opts.household);
     });
   }
 
   function stampAndCheckPersonas(personas, opts) {
-    var bands = Schroeder.LocalPersonaProvider.AGE_BANDS;
+    var bands = Shichinin.LocalPersonaProvider.AGE_BANDS;
     personas.forEach(function (p, i) {
       // Decoys are grown-ups: stamp the adult marker on any persona a
       // provider returned without one (the Spark narrative schema has
@@ -143,7 +143,7 @@ Schroeder.PersonaEngine = (function () {
           };
         });
       }).then(function (res) {
-        var canaryIds = (Schroeder.Canaries && Schroeder.Canaries.CANARY_IDS) || [];
+        var canaryIds = (Shichinin.Canaries && Shichinin.Canaries.CANARY_IDS) || [];
         var stated = res.personas.map(function (p, idx) {
           var copy = {};
           for (var k3 in p) copy[k3] = p[k3];
@@ -204,7 +204,7 @@ Schroeder.PersonaEngine = (function () {
   // visitedUrls (dedup, most recent last, capped). Returns a NEW state.
   function updateVisitedUrls(arcState, personaId, steps) {
     if (!arcState) return arcState;
-    var fresh = Schroeder.LocalPersonaProvider.collectVisitedUrls(steps);
+    var fresh = Shichinin.LocalPersonaProvider.collectVisitedUrls(steps);
     var state = JSON.parse(JSON.stringify(arcState));
     state.personas = (state.personas || []).map(function (p) {
       if (p.id !== personaId) return p;
@@ -231,4 +231,4 @@ Schroeder.PersonaEngine = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.PersonaEngine;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.PersonaEngine;

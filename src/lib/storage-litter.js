@@ -1,4 +1,4 @@
-// Schroeder — storage litter, CONSERVATIVE v1.
+// Shichinin — storage litter, CONSERVATIVE v1.
 //
 // Only a small allowlist of clearly analytics-scoped localStorage keys may
 // be seeded, and only keys that ALREADY EXIST on the page during a persona
@@ -6,9 +6,9 @@
 // not invent a zoo of new keys). If nothing matches, the content script
 // observes and logs only. Anything session/auth-shaped is explicitly
 // off-limits even if it somehow matched a pattern.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.StorageLitter = (function () {
+Shichinin.StorageLitter = (function () {
   var FORBIDDEN = /(token|auth|sess|login|user|account|cart|checkout|jwt|passw)/i;
 
   // Exact-name entries are curated constants (e.g. 'optimizelyEndUserId' is
@@ -44,8 +44,8 @@ Schroeder.StorageLitter = (function () {
   function generateSeedValue(entry, rng) {
     switch (entry.kind) {
       case 'uuid':
-        return Schroeder.CookieClassify
-          ? Schroeder.CookieClassify.generateUuid(rng)
+        return Shichinin.CookieClassify
+          ? Shichinin.CookieClassify.generateUuid(rng)
           : 'generated-by-persona-visit';
       case 'ga':
         return 'GA1.1.' + rng.int(100000000, 2147483647) + '.' + rng.int(1500000000, 1999999999);
@@ -75,4 +75,4 @@ Schroeder.StorageLitter = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.StorageLitter;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.StorageLitter;

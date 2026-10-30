@@ -1,4 +1,4 @@
-// Schroeder — canary clusters (v2, Wonder build).
+// Shichinin — canary clusters (v2, Wonder build).
 //
 // A canary is a planted interest with three properties:
 //   (i)   ABSENT from the Oct 28 ad-profile baseline,
@@ -6,16 +6,16 @@
 //   (iii) distinctive vocabulary, so a substring match in a later
 //         ad-profile snapshot is unambiguous.
 // Because the canary was verifiably absent at baseline and the ONLY actor
-// emitting it is Schroeder, a canary hit in Google My Ad Center topics or
+// emitting it is Shichinin, a canary hit in Google My Ad Center topics or
 // Meta ad topics is causal proof of pollution — not correlation, not
 // profile drift. That is the Evidence Lab's kill shot.
 //
 // Shape mirrors clusters.js: { id, label, archetype, canary: true,
 // sites: [{url, tagScore, revisit}], queries: [..], synonyms: [..] }.
 // `synonyms` is the Evidence Lab match list (lowercase substrings).
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Canaries = (function () {
+Shichinin.Canaries = (function () {
   var CANARIES = [
     {
       id: 'canary-axolotl',
@@ -132,4 +132,4 @@ Schroeder.Canaries = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Canaries;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Canaries;

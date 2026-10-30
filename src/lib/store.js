@@ -1,9 +1,9 @@
-// Schroeder — activity log + daily stats (chrome.storage.local backed).
+// Shichinin — activity log + daily stats (chrome.storage.local backed).
 // Everything the automation does is recorded here and shown in the
 // dashboard. The modelApiKey is never written to the log.
-var Schroeder = (typeof Schroeder !== 'undefined') ? Schroeder : {};
+var Shichinin = (typeof Shichinin !== 'undefined') ? Shichinin : {};
 
-Schroeder.Store = (function () {
+Shichinin.Store = (function () {
   var LOG_KEY = 'activityLog';
   var STATS_KEY = 'dailyStats';
   var MAX_LOG = 600;
@@ -61,12 +61,12 @@ Schroeder.Store = (function () {
 
   function getSettings() {
     return getLocal(['settings']).then(function (data) {
-      return Schroeder.Settings.merge(data.settings);
+      return Shichinin.Settings.merge(data.settings);
     });
   }
 
   function saveSettings(settings) {
-    return setLocal({ settings: Schroeder.Settings.merge(settings) });
+    return setLocal({ settings: Shichinin.Settings.merge(settings) });
   }
 
   // ----- v2: persona arc state -------------------------------------------
@@ -139,4 +139,4 @@ Schroeder.Store = (function () {
   };
 })();
 
-if (typeof module !== 'undefined' && module.exports) module.exports = Schroeder.Store;
+if (typeof module !== 'undefined' && module.exports) module.exports = Shichinin.Store;

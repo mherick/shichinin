@@ -1,4 +1,4 @@
-// Runs the whole Schroeder unit-test suite.
+// Runs the whole Shichinin unit-test suite.
 require('./test-cookies');
 require('./test-actions');
 require('./test-personas');

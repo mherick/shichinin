@@ -12,9 +12,6 @@ Built during the Meta AI Developer Hackathon, October 26 – November 4, 2026.
 the seven samurai who stood between a village and what was coming for it.
 Shichinin's decoys do the same for a household: they stand between the
 machine and the trackers, and the profile gets built on them instead.
-(The internal code namespace still uses the development code name,
-Schroeder — you'll see `Schroeder.*` in the source. Same code, shipped
-name is Shichinin.)
 
 ## Built during the event
 
