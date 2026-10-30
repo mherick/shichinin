@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Schroeder — Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="card header-card">
+    <div class="header-main">
+      <h1>Schroeder</h1>
+      <span id="status" class="pill">…</span>
+    </div>
+    <button id="pauseBtn" class="big-toggle">Pause Schroeder</button>
+  </header>
+
+  <section class="card">
+    <p class="intro">Schroeder visits websites and runs searches as a set of
+    fake “decoy” versions of you, so the companies that track you end up with a
+    muddled profile instead of your real interests. It
+    <strong>never clicks ads</strong>.</p>
+    <p id="workingLine" class="working-line">…</p>
+  </section>
+
+  <main>
+    <section class="card">
+      <h2>Household — who uses this browser?</h2>
+      <p class="note">Schroeder's decoys are always grown-ups. This setting
+      decides how hard the machine leans into that, so the profile ad
+      trackers build is a profile of adults.</p>
+      <div class="household-options" role="radiogroup" aria-label="Household — who uses this browser">
+        <label class="household-option">
+          <input type="radio" name="household" id="householdAdults" value="adults">
+          <span class="household-name">Adults only</span>
+        </label>
+        <label class="household-option">
+          <input type="radio" name="household" id="householdChild" value="child">
+          <span class="household-name">A child uses this browser</span>
+        </label>
+        <label class="household-option">
+          <input type="radio" name="household" id="householdMixed" value="mixed">
+          <span class="household-name">A mix of people</span>
+        </label>
+      </div>
+      <p id="householdExplainer" class="household-explainer"></p>
+    </section>
+
+    <section class="card">
+      <h2>Your decoys today</h2>
+      <p id="providerNote" class="note"></p>
+      <ul id="personas" class="personas"></ul>
+    </section>
+
+    <section class="card">
+      <h2>What Google thinks you're into</h2>
+      <p class="note">Your own copy of Google's ad profile for you. It starts
+      with sample lists — paste your own from Google My Ad Center (ideally
+      captured before you start the decoys) and save. Your copy is kept only
+      in this browser.</p>
+      <label>Google topics (one per line)
+        <textarea id="googleTopics" rows="6" spellcheck="false"></textarea></label>
+      <label>Google brands (one per line)
+        <textarea id="googleBrands" rows="3" spellcheck="false"></textarea></label>
+      <button id="saveGoogleBtn" class="primary">Save my copy</button>
+      <span id="googleSaved" class="note"></span>
+    </section>
+
+    <section class="card">
+      <h2>Everyday settings</h2>
+      <label class="row"><span>Safe mode — only change cookies from known tracking companies</span>
+        <input type="checkbox" id="setSafeMode"></label>
+      <label class="row"><span>Accept cookie pop-ups for me (tap “Accept all” automatically)</span>
+        <input type="checkbox" id="setConsent"></label>
+      <button id="saveSettingsBtn" class="primary">Save settings</button>
+
+      <h3>Sites Schroeder leaves alone</h3>
+      <p class="note">Schroeder never runs on these sites (the exact site or
+      anything under it). Your bank and other sensitive sites are on the list
+      by default — one site per line.</p>
+      <textarea id="pausedSites" rows="6" spellcheck="false"></textarea>
+      <button id="savePausedBtn">Save list</button>
+    </section>
+
+    <details class="card advanced">
+      <summary>Advanced settings</summary>
+      <div class="advanced-body">
+        <h3>Meta AI key (optional)</h3>
+        <label class="row"><span>Your own Meta Model API key — lets Meta's Spark AI invent richer decoys</span>
+          <input type="password" id="setApiKey" placeholder="Leave blank to plan decoys on this device" autocomplete="off"></label>
+        <p class="note">Stored only in this browser's local extension storage. Never logged,
+        never sent anywhere except api.meta.ai when planning decoys. Spark only writes
+        the stories behind the decoys — it never produces anything the extension runs directly.</p>
+        <button id="saveApiKeyBtn" class="primary">Save key</button>
+
+        <h3>Do it now</h3>
+        <div class="btn-row">
+          <button id="regenBtn">Make a fresh plan for today</button>
+          <button id="sweepBtn">Shuffle cookies now</button>
+        </div>
+      </div>
+    </details>
+
+    <section class="card">
+      <h2>Recent activity</h2>
+      <ul id="log" class="log"></ul>
+      <button id="clearLogBtn">Clear this list</button>
+    </section>
+  </main>
+
+  <script src="lib/settings.js"></script>
+  <script src="lib/store.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

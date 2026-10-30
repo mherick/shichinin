@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Schroeder</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Schroeder</h1>
+    <span id="status" class="pill">…</span>
+  </header>
+  <p class="tagline">Schroeder sends out fake “decoy” versions of you to browse
+  and search, so ad companies end up tracking them instead of the real you.</p>
+  <p id="householdLine" class="hint">Household: …</p>
+
+  <button id="pauseBtn" class="big-toggle">Pause</button>
+
+  <section class="card">
+    <h2>How much decoy activity?</h2>
+    <div class="segmented" role="group" aria-label="How much decoy activity">
+      <button id="aggrLow" class="seg" data-level="low">Light</button>
+      <button id="aggrStd" class="seg" data-level="medium">Standard</button>
+      <button id="aggrHigh" class="seg" data-level="high">High</button>
+    </div>
+    <p id="aggrHint" class="hint"></p>
+  </section>
+
+  <section class="card">
+    <h2>Today so far</h2>
+    <p id="activityLine" class="activity-line">…</p>
+    <ul class="counts">
+      <li><span>Visits made for your decoys</span><strong id="cVisits">0</strong></li>
+      <li><span>Searches made for your decoys</span><strong id="cSearches">0</strong></li>
+      <li><span>Cookies shuffled</span><strong id="cRot">0</strong></li>
+      <li><span>Cookies removed early</span><strong id="cExp">0</strong></li>
+      <li><span>Cookie pop-ups accepted for you</span><strong id="cConsent">0</strong></li>
+      <li><span>Bits of decoy data planted</span><strong id="cSeed">0</strong></li>
+    </ul>
+  </section>
+
+  <section class="actions">
+    <button id="sweepBtn">Shuffle cookies now</button>
+    <button id="dashBtn">All settings</button>
+  </section>
+
+  <p class="fineprint">Schroeder <strong>never clicks ads</strong>. It only visits
+  pages, runs searches, and tidies up cookies.</p>
+
+  <script src="lib/settings.js"></script>
+  <script src="lib/store.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
