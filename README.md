@@ -1,4 +1,4 @@
-# Schroeder (project code name)
+# Shichinin
 
 A Chrome extension that fights ad tracking with **noise instead of silence**.
 Instead of blocking trackers, it feeds them a crowd: rotating, entirely
@@ -7,7 +7,14 @@ the profile trackers build for the machine is a profile of people who
 don't exist.
 
 Built during the Meta AI Developer Hackathon, October 26 – November 4, 2026.
-"Schroeder" is the project code name; the final product name is pending.
+
+**The name:** *Shichinin* (七人) is Japanese for "seven people" — a nod to
+the seven samurai who stood between a village and what was coming for it.
+Shichinin's decoys do the same for a household: they stand between the
+machine and the trackers, and the profile gets built on them instead.
+(The internal code namespace still uses the development code name,
+Schroeder — you'll see `Schroeder.*` in the source. Same code, shipped
+name is Shichinin.)
 
 ## Built during the event
 
@@ -21,7 +28,7 @@ hackathon window.
 
 Trackers don't just profile a person — they profile a *machine*, including
 whether a child uses it, and marketing aimed at children follows that
-profile. Schroeder's first setting is therefore **Household — who uses
+profile. Shichinin's first setting is therefore **Household — who uses
 this browser?**
 
 - **Adults only** — every decoy is a grown-up, and the adult signal stays
@@ -35,7 +42,7 @@ this browser?**
   child's real clicks get buried under adult noise.
 - **A mix of people** — standard decoy rotation.
 
-Schroeder makes a machine *look adults-only to ad trackers*. It does not
+Shichinin makes a machine *look adults-only to ad trackers*. It does not
 claim to protect children, and it does not change the ads served inside
 kids' content itself — it shapes the inferred profile, which is the part
 of the system that follows a household from site to site.

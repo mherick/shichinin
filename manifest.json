@@ -1,7 +1,7 @@
 {
   "action": {
     "default_popup": "src/popup.html",
-    "default_title": "Schroeder"
+    "default_title": "Shichinin"
   },
   "background": {
     "service_worker": "src/background.js"
@@ -22,12 +22,12 @@
       "run_at": "document_idle"
     }
   ],
-  "description": "Schroeder sends out fake “decoy” grown-ups to browse and search, so ad trackers build a profile of adults instead of your household's real one — household mode makes this machine look adults-only to ad trackers, so marketing aimed at children has nothing to aim at. It never clicks ads.",
+  "description": "Shichinin sends out fake “decoy” grown-ups to browse and search, so ad trackers build a profile of adults instead of your household's real one — household mode makes this machine look adults-only to ad trackers, so marketing aimed at children has nothing to aim at. It never clicks ads.",
   "host_permissions": [
     "<all_urls>"
   ],
   "manifest_version": 3,
-  "name": "Schroeder",
+  "name": "Shichinin",
   "options_page": "src/dashboard.html",
   "permissions": [
     "cookies",

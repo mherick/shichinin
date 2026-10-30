@@ -1,14 +1,14 @@
-# Schroeder on iPhone — feasibility verdict
+# Shichinin on iPhone — feasibility verdict
 
-**Question:** can Mando test Schroeder v1 on his iPhone?
+**Question:** can Mando test Shichinin v1 on his iPhone?
 
-**Short answer:** Not in Chrome — ever. The only route is converting Schroeder into a **Safari Web Extension** on his Mac and sideloading it through Xcode. That route exists and the core APIs mostly have Safari equivalents, but it costs real setup time, the free version **expires every 7 days**, and two of Schroeder's core mechanisms (background automation across all sites, and the cookie pool) run into Safari-specific friction. **Recommendation: park phone testing until desktop v1 proves out.** Details and sources below.
+**Short answer:** Not in Chrome — ever. The only route is converting Shichinin into a **Safari Web Extension** on his Mac and sideloading it through Xcode. That route exists and the core APIs mostly have Safari equivalents, but it costs real setup time, the free version **expires every 7 days**, and two of Shichinin's core mechanisms (background automation across all sites, and the cookie pool) run into Safari-specific friction. **Recommendation: park phone testing until desktop v1 proves out.** Details and sources below.
 
 ---
 
 ## 1. Chrome on iOS: no extensions, no workaround
 
-Chrome extensions **do not run on iOS Chrome**. Every browser on iOS is WebKit-based under the hood, and Chrome for iOS has no extension support, no developer mode, and no sideloading path. This is a platform rule, not a Schroeder problem — there is nothing to configure or unlock.
+Chrome extensions **do not run on iOS Chrome**. Every browser on iOS is WebKit-based under the hood, and Chrome for iOS has no extension support, no developer mode, and no sideloading path. This is a platform rule, not a Shichinin problem — there is nothing to configure or unlock.
 
 Sources:
 - https://web-highlights.com/blog/how-to-use-browser-extensions-on-iphone/
@@ -25,7 +25,7 @@ Safari is the one iOS browser that supports Web Extensions. An extension can't b
 xcrun safari-web-extension-converter /path/to/schroeder
 ```
 
-It generates a project with macOS and iOS targets by default, referencing the original extension resources (so Schroeder's JS mostly carries over as-is; the manifest and background model need Safari adjustments — see §4). Apple also offers a **Safari Web Extension Packager**: upload a ZIP in App Store Connect and Apple converts it for TestFlight distribution — but that requires App Store Connect access, i.e. the paid program below.
+It generates a project with macOS and iOS targets by default, referencing the original extension resources (so Shichinin's JS mostly carries over as-is; the manifest and background model need Safari adjustments — see §4). Apple also offers a **Safari Web Extension Packager**: upload a ZIP in App Store Connect and Apple converts it for TestFlight distribution — but that requires App Store Connect access, i.e. the paid program below.
 
 Sources:
 - https://developer.apple.com/safari/extensions/
@@ -57,22 +57,22 @@ Sources:
 - https://bitrig.com/blog/testflight-for-beginners
 - https://betadrop.app/testflight-alternative/
 
-## 4. Do Schroeder's APIs exist in Safari?
+## 4. Do Shichinin's APIs exist in Safari?
 
 Checked against MDN browser-compat-data (via the W3cub mirror) and WebKit release notes:
 
-| Schroeder need | Safari desktop | Safari on iOS | Notes |
+| Shichinin need | Safari desktop | Safari on iOS | Notes |
 |---|---|---|---|
 | `alarms` (scheduler tick) | ✅ Safari 14 | ✅ iOS 15 | Supported — https://docs.w3cub.com/web_extensions/api/alarms/create.html |
 | `storage` (settings, log, day plan) | ✅ | ✅ | Actively maintained — Safari Technology Preview 255 notes even fix `storage.local.get()` behavior: https://webkit.org/blog/18482/release-notes-for-safari-technology-preview-255/ |
 | `tabs`, `runtime`, messaging | ✅ | ✅ | Core APIs are supported per the same compat data |
-| `action` (popup) | ✅ with limits | ✅ with limits | Popup is manual-tap only on mobile; badge text color unsupported — cosmetic for Schroeder |
+| `action` (popup) | ✅ with limits | ✅ with limits | Popup is manual-tap only on mobile; badge text color unsupported — cosmetic for Shichinin |
 | `cookies` (the cookie pool) | ⚠️ Partial | ⚠️ **Unverified** | `cookies.getAll` shows Safari 14 / iOS 15 in current compat data, **with caveats**: only the default cookie store is returned and **HttpOnly cookies are not retrieved**. Snapshots disagree on iOS method coverage, and `set`/`remove` on iOS were not definitively verified. This is the **#1 thing to verify inside the converted project** — the cookie pool is a core mechanism and historically the shakiest API in Safari. https://docs.w3cub.com/web_extensions/api/cookies/getall.html |
-| `idle` (pause when locked) | ❓ No support evidence found | ❓ | Schroeder already degrades gracefully (falls back to "active"), so worst case the lock-pause simply never fires on iOS |
+| `idle` (pause when locked) | ❓ No support evidence found | ❓ | Shichinin already degrades gracefully (falls back to "active"), so worst case the lock-pause simply never fires on iOS |
 
 **Platform friction beyond the API table:**
-- **Per-site permission grants.** Safari asks the user to grant an extension access per site ("for one day" or "always"). That model fights Schroeder's design, which needs `<all_urls>` background automation without babysitting prompts. Source: https://ppc.land/browser-extension-permissions/
-- **Intelligent Tracking Prevention.** Safari blocks/partitions third-party cookies by default, which changes what the cookie pool can even see — part of Schroeder's target surface is pre-shrunk on Safari. Source: https://www.browserling.com/safari-testing
+- **Per-site permission grants.** Safari asks the user to grant an extension access per site ("for one day" or "always"). That model fights Shichinin's design, which needs `<all_urls>` background automation without babysitting prompts. Source: https://ppc.land/browser-extension-permissions/
+- **Intelligent Tracking Prevention.** Safari blocks/partitions third-party cookies by default, which changes what the cookie pool can even see — part of Shichinin's target surface is pre-shrunk on Safari. Source: https://www.browserling.com/safari-testing
 - **Different background model.** Safari's extension background/service-worker behavior differs from Chrome's, so the alarm-driven executor would need real adaptation and testing, not just a repackage. Source: https://www.wiredlabz.com/article/what-to-expect-from-the-next-generation-of-extension-apis
 
 ## 5. Bottom line
